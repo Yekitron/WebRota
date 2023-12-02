@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <!-- jQuery and FullCalendar JS -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{% static 'fullcalendar-6.1.9/dist/index.global.min.js' %}"></script>
+    <script src="{% static 'fullcalendar-6.1.9/packages/bootstrap5/index.global.min.js' %}"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var events = [];
+            {% for f in form %}
+            var dateInput1 = '{{ f.date }}';
+            console.log(dateInput1);
+
+            var dateInput = new Date(dateInput1);
+
+            // Clone the original date
+            var endDate = new Date(dateInput);
+
+            // Increment the date by one day
+            endDate.setDate(endDate.getDate() + 1);
+
+            // Handle cases where the day is the last day of the month
+            if (endDate.getDate() === 1) {
+                // Move to the first day of the next month
+                endDate.setMonth(endDate.getMonth() + 1);
+            }
+
+            // Handle cases where the day is the last day of the year
+            if (endDate.getMonth() === 0 && endDate.getDate() === 1) {
+                // Move to the first day of the next year
+                endDate.setFullYear(endDate.getFullYear() + 1);
+            }
+
+            var year = dateInput.getFullYear();
+            var month = ('0' + (dateInput.getMonth() + 1)).slice(-2);
+            var day = ('0' + dateInput.getDate()).slice(-2);
+
+            var newYear = endDate.getFullYear();
+            var newMonth = ('0' + (endDate.getMonth() + 1)).slice(-2);
+            var newDay = ('0' + endDate.getDate()).slice(-2);
+
+            var oldDate = year + '-' + month + '-' + day;
+            var newDate = newYear + '-' + newMonth + '-' + newDay;
+
+            console.log(oldDate);
+            console.log(newDate);
+
+            var shift = '{{ f.shift }}';
+            if (shift === 'Day') {
+                eventObj = {
+                    title: '{{ f.user }}',
+                    start: oldDate + 'T08:00:00',
+                    end: oldDate + 'T20:00:00',
+                    date: oldDate,
+                };
+            } else  {
+                eventObj = {
+                    title: '{{ f.user }}',
+                    start: oldDate + 'T20:00:00',
+                    end: newDate + 'T08:00:00',
+                    date: oldDate,
+                };
+            }
+
+            events.push(eventObj);
+            {% endfor %}
+
+            // Assuming 'events' is your array of events
+            var lastEvent = events[events.length - 1];
+
+            // Assuming 'oldDate' is a property of your event object
+            var lastOldDate = lastEvent.date;
+
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // Display the week view
+                initialDate: lastOldDate, // Display the initial date you want
+                events: events,
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'dayGridMonth,listWeek,timeGridWeek' // user can switch between the two
+                },
+            });
+
+            calendar.render();
+        });
+    </script>
+{% endblock %}
+
+{% block content %}  
+    <div class="p-2">
+        {% for f in form %}
+        {{ f.user }}
+        {{ f.date}}
+        {% endfor %}
+        
+    </div>
+    <div id='calendar' class="p-2 "></div>
+    <div class="p-2 ">
+      <button type="submit" class="btn btn-primary" >Submit</button>
+    </div>
+{% endblock %}
+    

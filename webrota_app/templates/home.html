@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+      <h3>Select Shift</h3>
+      <form method="post" action="{% url 'webrota-calendar' %}">
+        {% csrf_token %}
+        
+      
+      <tr>
+          <th><label for="id_user" class="form-label">User:</label></th>
+          <td>
+              <select name="user" class="form-select mb-3" id="id_user">
+                  <option selected disabled>Select User</option>
+                  <option value="User_A">User_A</option>
+                  <option value="User_B">User_B</option>
+                  <option value="User_C">User_C</option>
+              </select>
+          </td>
+      </tr>
+      <tr>
+        <th><label for="id_date" class="form-label">Date:</label></th>
+        <td>
+            <input type="date" name="date" required class="form-control mb-3" id="id_date">
+        </td>
+    </tr>
+      
+      <tr>
+          <th><label for="id_dropdown_options" class="form-label">Dropdown options:</label></th>
+          <td>
+              <select name="dropdown_options" class="form-select mb-3" id="id_dropdown_options">
+                  <option selected disabled>Select Day/Night</option>
+                  <option value="Day">Day</option>
+                  <option value="Night">Night</option>
+              </select>
+          </td>
+      </tr>
+      
+    
+        <div class="form-label mb-3">
+          <button type="submit" class="btn btn-primary" >Submit</button>
+        </div>
+
+        <a href="{% url 'admin:index' %}">Go to Admin Page</a>
+
+      </form>
+{% endblock %}

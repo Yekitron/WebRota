@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container md-6">
+        <p>{% for shift in shifts %}
+            {{ shift.user }}
+            {{ shif.date}}
+            {% endfor %}
+        </p>
+        
+        <iframe
+            class="container-fluid"
+            src="https://calendar.google.com/calendar/embed?src=primary&ctz=UTC"
+            height="600"
+        ></iframe>
+    </div>
+{% endblock %}
